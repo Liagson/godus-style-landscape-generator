@@ -34,6 +34,7 @@ public class MapGenerator : MonoBehaviour {
     public void GenerateMap() {
         float selected_depth = 0.2f;
         int borderSize = 1;
+        int selected_layer = 0;
         float[,] borderedMap = new float[width + borderSize * 2, height + borderSize * 2];
         map = new float[width, height];
 
@@ -48,18 +49,12 @@ public class MapGenerator : MonoBehaviour {
                 }
             }
         }
-        selected_height_map = current_height_map(borderedMap, selected_depth);
-
-        int pos = 0;
-        List<Color32> lista_color = new List<Color32>();
-        lista_color.Add(new Color32(255, 0, 0, 1));
-        lista_color.Add(new Color32(0, 255, 0, 1));
-        lista_color.Add(new Color32(0, 0, 255, 1));
+        selected_height_map = current_height_map(borderedMap, selected_depth);        
         while (selected_height_map != null) {
-            MeshGenerator.GenerateMesh(selected_height_map, 1f, selected_depth, new GameObject("Layer_" + pos.ToString()), selectLayerColour(pos));
+            MeshGenerator.GenerateMesh(selected_height_map, 1f, selected_depth, new GameObject("Layer_" + selected_layer.ToString()), selectLayerColour(selected_layer));
             selected_depth += 0.2f;
             selected_height_map = current_height_map(borderedMap, selected_depth);
-            pos++;
+            selected_layer++;
         }        
     }
     
