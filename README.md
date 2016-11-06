@@ -1,4 +1,5 @@
 # Procedural, Godus style, landscape generator (work in progress)
+![IMG1](https://raw.githubusercontent.com/Liagson/godus-style-landscape-generator/master/pics/landscape.png)
 
 # Acknowledgements
 Special thanks to [SebLague's work](https://github.com/SebLague). Without it I wouldn't have made this.
