@@ -27,6 +27,7 @@ public class MapGenerator : MonoBehaviour {
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            seed++;
             GenerateMap();
         }
     }
@@ -72,8 +73,10 @@ public class MapGenerator : MonoBehaviour {
         else if (layer < 16)
             return new Color32(210, 180, 0, 1);
         // Wheat
-        else if (layer < 22)
+        else if (layer < 20)
             return new Color32(220, 240, 0, 1);
+        else if (layer < 22)
+            return new Color32(100, 255, 0, 1);
         // Forest
         else if (layer < 25)
             return new Color32(130, 190, 0, 1);
@@ -81,8 +84,10 @@ public class MapGenerator : MonoBehaviour {
             return new Color32(50, 150, 0, 1);
         else if (layer < 32)
             return new Color32(0, 80, 0, 1);
+        else if (layer < 35)
+            return new Color32(0, 60, 0, 1);
         // Rock
-        else if (layer < 36)
+        else if (layer < 38)
             return new Color32(80, 80, 0, 1);
         else if (layer < 40)
             return new Color32(80, 80, 80, 1);
