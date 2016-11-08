@@ -20,6 +20,7 @@ public class MapGenerator : MonoBehaviour {
 
     float[,] map;
     float[,] selected_height_map;
+    List<string> gameObjectTerrainLayers = new List<string>();
 
     void Start() {
         GenerateMap();
@@ -27,6 +28,9 @@ public class MapGenerator : MonoBehaviour {
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            foreach(string terrain_layer in gameObjectTerrainLayers) {
+                Destroy(GameObject.Find(terrain_layer));
+            }
             seed++;
             GenerateMap();
         }
@@ -53,6 +57,7 @@ public class MapGenerator : MonoBehaviour {
         selected_height_map = current_height_map(borderedMap, selected_depth);        
         while (selected_height_map != null) {
             MeshGenerator.GenerateMesh(selected_height_map, 1f, selected_depth, new GameObject("Layer_" + selected_layer.ToString()), selectLayerColour(selected_layer));
+            gameObjectTerrainLayers.Add("Layer_" + selected_layer.ToString());
             selected_depth += 0.2f;
             selected_height_map = current_height_map(borderedMap, selected_depth);
             selected_layer++;
