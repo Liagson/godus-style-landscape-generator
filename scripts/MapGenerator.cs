@@ -22,6 +22,9 @@ public class MapGenerator : MonoBehaviour {
     float[,] selected_height_map;
     List<GameObject> layerObjects;
 
+    float[] square_distortion_columns;
+    float[] square_distortion_rows; 
+
     void Start() {
         GenerateMap();
     }
@@ -55,10 +58,13 @@ public class MapGenerator : MonoBehaviour {
                 }
             }
         }
+
+        set_square_distortion();
+
         selected_height_map = current_height_map(borderedMap, selected_depth);        
         while (selected_height_map != null) {
             layerObjects.Add(new GameObject("Layer_" + selected_layer.ToString()));
-            MeshGenerator.GenerateMesh(selected_height_map, 1f, selected_depth, layerObjects[layerObjects.Count - 1], selectLayerColour(selected_layer));
+            MeshGenerator.GenerateMesh(selected_height_map, 1f, square_distortion_rows, square_distortion_columns, selected_depth, layerObjects[layerObjects.Count - 1], selectLayerColour(selected_layer));
             selected_depth += 0.2f;
             selected_height_map = current_height_map(borderedMap, selected_depth);
             selected_layer++;
@@ -119,5 +125,21 @@ public class MapGenerator : MonoBehaviour {
         }
         if (isBlank) return null;
         else return selected_height_map;
-    }    
+    }
+    
+    void set_square_distortion() {
+        System.Random pseudorandom = new System.Random(seed);
+        square_distortion_columns = new float[width + 2];
+        square_distortion_rows = new float[height + 2];
+
+        square_distortion_columns[0] = 0;
+        square_distortion_rows[0] = 0;
+
+        for (int x = 1; x < width + 2; x++) {
+            square_distortion_columns[x] = x + ((float)pseudorandom.NextDouble() - 0.5f)/2;
+        }
+        for(int y = 1; y < height + 2; y++) {
+            square_distortion_rows[y] = y + ((float)pseudorandom.NextDouble() - 0.5f) / 2;
+        }
+    }
 }

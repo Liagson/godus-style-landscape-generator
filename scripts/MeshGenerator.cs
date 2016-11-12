@@ -14,7 +14,7 @@ public class MeshGenerator : MonoBehaviour {
     static List<List<int>> outlines = new List<List<int>>();
     static HashSet<int> checkedVertices = new HashSet<int>();
 
-    public static void GenerateMesh(float[,] map, float squareSize, float height, GameObject gameObject, Color32 color_mesh) {
+    public static void GenerateMesh(float[,] map, float squareSize, float[] square_distortion_rows, float[] square_distortion_columns, float height, GameObject gameObject, Color32 color_mesh) {
         Mesh mesh = new Mesh();
         MeshFilter mf = (MeshFilter)gameObject.AddComponent(typeof(MeshFilter));
         MeshRenderer mr = (MeshRenderer)gameObject.AddComponent(typeof(MeshRenderer));
@@ -23,7 +23,7 @@ public class MeshGenerator : MonoBehaviour {
         outlines.Clear();
         checkedVertices.Clear();
 
-        squareGrid = new SquareGrid(map, squareSize, height);
+        squareGrid = new SquareGrid(map, squareSize, square_distortion_rows, square_distortion_columns, height);
 
         vertices = new List<Vector3>();
         triangles = new List<int>();
@@ -273,7 +273,7 @@ public class MeshGenerator : MonoBehaviour {
     public class SquareGrid {
         public Square[,] squares;
 
-        public SquareGrid(float[,] map, float squareSize, float height) {
+        public SquareGrid(float[,] map, float squareSize, float[] square_distortion_rows, float[] square_distortion_columns, float height) {
             int nodeCountX = map.GetLength(0);
             int nodeCountY = map.GetLength(1);
             float mapWidth = nodeCountX * squareSize;
@@ -283,7 +283,7 @@ public class MeshGenerator : MonoBehaviour {
 
             for (int x = 0; x < nodeCountX; x++) {
                 for (int y = 0; y < nodeCountY; y++) {
-                    Vector3 pos = new Vector3(-mapWidth / 2 + x * squareSize + squareSize / 2, height, -mapHeight / 2 + y * squareSize + squareSize / 2);
+                    Vector3 pos = new Vector3(-mapWidth / 2 + square_distortion_columns[x] * squareSize + squareSize / 2, height, -mapHeight / 2 + square_distortion_rows[y] * squareSize + squareSize / 2);
                     controlNodes[x, y] = new ControlNode(pos, map[x, y] == 1, squareSize);
                 }
             }
