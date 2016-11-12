@@ -19,6 +19,8 @@ public class MapGenerator : MonoBehaviour {
     
 
     float[,] map;
+    float[,] borderedMap;
+    float[,] cliff_map;
     float[,] selected_height_map;
     List<GameObject> layerObjects;
 
@@ -44,11 +46,11 @@ public class MapGenerator : MonoBehaviour {
         int borderSize = 1;
         int selected_layer = 0;
         layerObjects = new List<GameObject>();
-        float[,] borderedMap = new float[width + borderSize * 2, height + borderSize * 2];
+        borderedMap = new float[width + borderSize * 2, height + borderSize * 2];
         map = new float[width, height];
 
         map = Noise.GenerateNoiseMap(width, height, seed, noiseScale, octaves, persistance, lacunarity, offset);
-
+        
         for (int x = 0; x < borderedMap.GetLength(0); x++) {
             for (int y = 0; y < borderedMap.GetLength(1); y++) {
                 if (x >= borderSize && x < width + borderSize && y >= borderSize && y < height + borderSize) {
@@ -60,6 +62,7 @@ public class MapGenerator : MonoBehaviour {
         }
 
         set_square_distortion();
+        CliffMapFill();
 
         selected_height_map = current_height_map(borderedMap, selected_depth);        
         while (selected_height_map != null) {
@@ -129,6 +132,7 @@ public class MapGenerator : MonoBehaviour {
     
     void set_square_distortion() {
         System.Random pseudorandom = new System.Random(seed);
+
         square_distortion_columns = new float[width + 2];
         square_distortion_rows = new float[height + 2];
 
@@ -141,5 +145,58 @@ public class MapGenerator : MonoBehaviour {
         for(int y = 1; y < height + 2; y++) {
             square_distortion_rows[y] = y + ((float)pseudorandom.NextDouble() - 0.5f) / 2;
         }
+    }
+
+    void CliffMapFill() {
+        int randomFillPercent = 50;
+        int iterations = 0;
+        System.Random pseudoRandom = new System.Random(seed);
+
+        cliff_map = new float[width + 2, height + 2];
+
+        for (int x = 0; x < width + 2; x++) {
+            for (int y = 0; y < height + 2; y++) {
+                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                    cliff_map[x, y] = 1;
+                } else {
+                    cliff_map[x, y] = (pseudoRandom.Next(0, 100) > randomFillPercent) ? 1 : 0;
+                }
+            }
+        }
+
+        while(iterations < 3) {
+            for (int x = 0; x < width + 2; x++) {
+                for (int y = 0; y < height + 2; y++) {
+                    if (GetSurroundingHeightCount(x, y) > 4)
+                        cliff_map[x, y] = 1;
+                    else if (GetSurroundingHeightCount(x, y) < 4)
+                        cliff_map[x, y] = 0;
+                }
+            }
+            iterations++;
+        }
+        for (int x = 0; x < width + 2; x++) {
+            for (int y = 0; y < height + 2; y++) {
+                if(borderedMap[x, y] > 2.4f)
+                    borderedMap[x,y] = borderedMap[x,y] + cliff_map[x, y];
+            }
+        }
+    }
+
+    int GetSurroundingHeightCount(int gridX, int gridY) {
+        int wallCount = 0;
+        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++) {
+            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++) {
+                if (neighbourX >= 0 && neighbourX < width + 2 && neighbourY >= 0 && neighbourY < height + 2) {
+                    if (neighbourX != gridX || neighbourY != gridY) {
+                        wallCount += (cliff_map[neighbourX, neighbourY] > 0)?1:0;
+                    }
+                } else {
+                    wallCount++;
+                }
+            }
+        }
+
+        return wallCount;
     }
 }
