@@ -148,7 +148,7 @@ public class MapGenerator : MonoBehaviour {
     }
 
     void CliffMapFill() {
-        int randomFillPercent = 50;
+        int randomFillPercent = 45;
         int iterations = 0;
         System.Random pseudoRandom = new System.Random(seed);
 
@@ -156,11 +156,7 @@ public class MapGenerator : MonoBehaviour {
 
         for (int x = 0; x < width + 2; x++) {
             for (int y = 0; y < height + 2; y++) {
-                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                    cliff_map[x, y] = 1;
-                } else {
-                    cliff_map[x, y] = (pseudoRandom.Next(0, 100) > randomFillPercent) ? 1 : 0;
-                }
+                cliff_map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? 1 : 0;
             }
         }
 
@@ -177,7 +173,7 @@ public class MapGenerator : MonoBehaviour {
         }
         for (int x = 0; x < width + 2; x++) {
             for (int y = 0; y < height + 2; y++) {
-                if(borderedMap[x, y] > 2.4f)
+                if(borderedMap[x, y] > 3.0f)
                     borderedMap[x,y] = borderedMap[x,y] + cliff_map[x, y];
             }
         }
