@@ -76,12 +76,16 @@ public class MapGenerator : MonoBehaviour {
     
     Color32 selectLayerColour(int layer) {
         // Water
+        if (layer < 2)
+            return new Color32(0, 0, 20, 1);
         if (layer < 8)
             return new Color32(0, 0, 40, 1);
+        else if (layer < 10)
+            return new Color32(0, 160, 190, 1); 
         else if (layer < 11)
-            return new Color32(0, 255, 255, 1);
+            return new Color32(0, 255, 255, 1); 
         else if (layer < 12)
-            return new Color32(0, 200, 170, 1);
+            return new Color32(0, 255, 193, 1);
         // Sand
         else if (layer < 14)
             return new Color32(255, 220, 128, 1);
@@ -91,10 +95,10 @@ public class MapGenerator : MonoBehaviour {
         else if (layer < 20)
             return new Color32(220, 240, 0, 1);
         else if (layer < 22)
-            return new Color32(100, 255, 0, 1);
+            return new Color32(200, 200, 0, 1);
         // Forest
         else if (layer < 25)
-            return new Color32(130, 190, 0, 1);
+            return new Color32(0, 200, 0, 1);
         else if (layer < 28)
             return new Color32(50, 150, 0, 1);
         else if (layer < 32)
