@@ -39,34 +39,34 @@ public class MeshGenerator : MonoBehaviour {
         mr.material.name = "Material_" + height.ToString();
         mr.material.SetColor("_Color", color_mesh);
 
-        CreateWallMesh(mesh, mf, vertices, triangles);
+        CreateWallMesh(mesh, mf);
     }
 
-    static void CreateWallMesh(Mesh wallMesh, MeshFilter mf, List<Vector3> wallVertices, List<int> wallTriangles) {
+    static void CreateWallMesh(Mesh wallMesh, MeshFilter mf) {
 
         CalculateMeshOutlines();
         float wallHeight = 0.2f;
 
         foreach (List<int> outline in outlines) {
             for (int i = 0; i < outline.Count - 1; i++) {
-                int startIndex = wallVertices.Count;
-                wallVertices.Add(vertices[outline[i]]); // left
-                wallVertices.Add(vertices[outline[i + 1]]); // right
-                wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
-                wallVertices.Add(vertices[outline[i + 1]] - Vector3.up * wallHeight); // bottom right
+                int startIndex = vertices.Count;
+                vertices.Add(vertices[outline[i]]); // left
+                vertices.Add(vertices[outline[i + 1]]); // right
+                vertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
+                vertices.Add(vertices[outline[i + 1]] - Vector3.up * wallHeight); // bottom right
 
-                wallTriangles.Add(startIndex + 0);
-                wallTriangles.Add(startIndex + 2);
-                wallTriangles.Add(startIndex + 3);
+                triangles.Add(startIndex + 0);
+                triangles.Add(startIndex + 2);
+                triangles.Add(startIndex + 3);
 
-                wallTriangles.Add(startIndex + 3);
-                wallTriangles.Add(startIndex + 1);
-                wallTriangles.Add(startIndex + 0);
+                triangles.Add(startIndex + 3);
+                triangles.Add(startIndex + 1);
+                triangles.Add(startIndex + 0);
             }
         }
         mf.mesh = wallMesh;
-        wallMesh.vertices = wallVertices.ToArray();
-        wallMesh.triangles = wallTriangles.ToArray();
+        wallMesh.vertices = vertices.ToArray();
+        wallMesh.triangles = triangles.ToArray();
         wallMesh.RecalculateNormals();        
     }
 
