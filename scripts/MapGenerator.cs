@@ -79,7 +79,7 @@ public class MapGenerator : MonoBehaviour {
         // Water
         if (layer < 2)
             return new Color32(0, 0, 20, 1);
-        if (layer < 8)
+        else if (layer < 8)
             return new Color32(0, 0, 40, 1);
         else if (layer < 10)
             return new Color32(0, 160, 190, 1); 
