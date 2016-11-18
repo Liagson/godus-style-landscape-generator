@@ -123,8 +123,11 @@ public class MapGenerator : MonoBehaviour {
         float[,] selected_height_map = new float[global_map.GetLength(0), global_map.GetLength(1)];
         for (int x = 0; x < global_map.GetLength(0); x++) {
             for (int y = 0; y < global_map.GetLength(1); y++) {
-                if (global_map[x, y] >= current_height) { 
+                if (global_map[x, y] >= current_height && global_map[x, y] <= current_height + 0.3f) { 
                     selected_height_map[x, y] = 1;
+                    isBlank = false;
+                }else if (global_map[x, y] >= current_height) {
+                    selected_height_map[x, y] = 2;
                     isBlank = false;
                 }
                 else
