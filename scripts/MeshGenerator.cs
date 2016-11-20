@@ -284,7 +284,7 @@ public class MeshGenerator : MonoBehaviour {
             for (int x = 0; x < nodeCountX; x++) {
                 for (int y = 0; y < nodeCountY; y++) {
                     Vector3 pos = new Vector3(-mapWidth / 2 + square_distortion_columns[x] * squareSize + squareSize / 2, height, -mapHeight / 2 + square_distortion_rows[y] * squareSize + squareSize / 2);
-                    controlNodes[x, y] = new ControlNode(pos, map[x, y] >= 1, map[x, y] == 2, squareSize);
+                    controlNodes[x, y] = new ControlNode(pos, map[x, y] == 1, map[x, y] == 2, squareSize);
                 }
             }
 
@@ -303,6 +303,7 @@ public class MeshGenerator : MonoBehaviour {
         public ControlNode topLeft, topRight, bottomRight, bottomLeft;
         public Node centreTop, centreRight, centreBottom, centreLeft;
         public int configuration;
+        public int hidden_configuration;
 
         public Square(ControlNode _topLeft, ControlNode _topRight, ControlNode _bottomRight, ControlNode _bottomLeft) {
             topLeft = _topLeft;
