@@ -121,12 +121,12 @@ public class MapGenerator : MonoBehaviour {
     float[,] current_height_map(float[,] global_map, float current_height) {
         bool isBlank = true;
         float[,] selected_height_map = new float[global_map.GetLength(0), global_map.GetLength(1)];
-        for (int x = 0; x < global_map.GetLength(0); x++) {
-            for (int y = 0; y < global_map.GetLength(1); y++) {
+        for (int x = 1; x < global_map.GetLength(0); x++) {
+            for (int y = 1; y < global_map.GetLength(1); y++) {
                 if (hasCurrentHeight(x, y, global_map, current_height)) { 
                     selected_height_map[x, y] = 1;
                     isBlank = false;
-                }else if (global_map[x, y] >= current_height) {
+                }else if (global_map[x, y] > current_height + 0.1f) {
                     selected_height_map[x, y] = 2;
                     isBlank = false;
                 }
@@ -134,6 +134,16 @@ public class MapGenerator : MonoBehaviour {
                     selected_height_map[x, y] = 0;
             }
         }
+        for (int x = 0; x < global_map.GetLength(0); x++) {
+            selected_height_map[x, 0] = 0;
+            selected_height_map[x, global_map.GetLength(1) - 1] = 0;
+        }
+
+        for (int y = 0; y < global_map.GetLength(1); y++) {
+            selected_height_map[0, y] = 0;
+            selected_height_map[global_map.GetLength(0) - 1, y] = 0;
+        }
+
         if (isBlank) return null;
         else return selected_height_map;
     }
@@ -141,9 +151,9 @@ public class MapGenerator : MonoBehaviour {
     bool hasCurrentHeight(int pos_x, int pos_y, float[,] global_map, float current_height) {
         bool returnValue = false;
         
-        for(int x = pos_x - 1; x < pos_x + 2 && (x + 1) < global_map.GetLength(0); x++)
+        for (int x = pos_x - 1; x < pos_x + 2 && (x + 1) < global_map.GetLength(0); x++)
             for(int y = pos_y - 1; y < pos_y + 2 && (y + 1) < global_map.GetLength(1); y++) {
-                if (x > 0 && y > 0 && global_map[x, y] >= current_height - 0.1f && global_map[x, y] <= current_height + 0.1f)
+                if (global_map[x, y] >= current_height - 0.1f && global_map[x, y] <= current_height + 0.1f)
                     returnValue =  true;
             }
 
