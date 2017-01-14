@@ -123,7 +123,7 @@ public class MapGenerator : MonoBehaviour {
         float[,] selected_height_map = new float[global_map.GetLength(0), global_map.GetLength(1)];
         for (int x = 0; x < global_map.GetLength(0); x++) {
             for (int y = 0; y < global_map.GetLength(1); y++) {
-                if (hasCurrentHeight(x, y, global_map, current_height)) { 
+                if (global_map[x, y] >= current_height && global_map[x, y] <= current_height + 0.3f) { 
                     selected_height_map[x, y] = 1;
                     isBlank = false;
                 }else if (global_map[x, y] >= current_height) {
@@ -137,20 +137,7 @@ public class MapGenerator : MonoBehaviour {
         if (isBlank) return null;
         else return selected_height_map;
     }
-
-    bool hasCurrentHeight(int pos_x, int pos_y, float[,] global_map, float current_height) {
-        bool returnValue = false;
-        
-        for(int x = pos_x - 1; x < pos_x + 2 && (x + 1) < global_map.GetLength(0); x++)
-            for(int y = pos_y - 1; y < pos_y + 2 && (y + 1) < global_map.GetLength(1); y++) {
-                if (x > 0 && y > 0 && global_map[x, y] >= current_height - 0.1f && global_map[x, y] <= current_height + 0.1f)
-                    returnValue =  true;
-            }
-
-        return returnValue;
-    }
-
-
+    
     void set_square_distortion() {
         System.Random pseudorandom = new System.Random(seed);
 
